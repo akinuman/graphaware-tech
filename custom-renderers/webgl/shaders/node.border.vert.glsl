@@ -9,6 +9,7 @@ uniform mat3 u_matrix;
 
 varying vec4 v_color;
 varying float v_border;
+varying float v_donut;
 
 const float bias = 255.0 / 254.0;
 

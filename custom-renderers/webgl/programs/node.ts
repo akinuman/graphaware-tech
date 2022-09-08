@@ -22,6 +22,7 @@ export abstract class AbstractNodeProgram extends AbstractProgram implements INo
   positionLocation: GLint;
   sizeLocation: GLint;
   colorLocation: GLint;
+  donutLocation: GLint;
   matrixLocation: WebGLUniformLocation;
   ratioLocation: WebGLUniformLocation;
   scaleLocation: WebGLUniformLocation;
@@ -36,6 +37,7 @@ export abstract class AbstractNodeProgram extends AbstractProgram implements INo
     super(gl, vertexShaderSource, fragmentShaderSource, points, attributes);
 
     // Locations
+    this.donutLocation = gl.getAttribLocation(this.program, "a_donut");
     this.positionLocation = gl.getAttribLocation(this.program, "a_position");
     this.sizeLocation = gl.getAttribLocation(this.program, "a_size");
     this.colorLocation = gl.getAttribLocation(this.program, "a_color");
