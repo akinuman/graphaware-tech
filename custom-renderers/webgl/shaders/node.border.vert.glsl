@@ -22,7 +22,7 @@ void main() {
 
   v_border = (1.0 / u_ratio) * (0.5 / a_size);
 
-  // Extract the color:\
+  // Extract the color and donut:\
   v_donut = a_donut;
   v_color = a_color;
   v_color.a *= bias;

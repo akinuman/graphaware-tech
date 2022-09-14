@@ -9,7 +9,7 @@ import { NodeDisplayData } from "sigma/types";
 import Sigma from "sigma";
 
 export interface INodeProgram extends IProgram {
-  process(data: NodeDisplayData, hidden: boolean, offset: number): void;
+  process(data: NodeDisplayData & { donut?: number }, hidden: boolean, offset: number): void;
   render(params: RenderParams): void;
 }
 
@@ -22,7 +22,7 @@ export abstract class AbstractNodeProgram extends AbstractProgram implements INo
   positionLocation: GLint;
   sizeLocation: GLint;
   colorLocation: GLint;
-  donutLocation: GLint;
+  //donutLocation: GLint;
   matrixLocation: WebGLUniformLocation;
   ratioLocation: WebGLUniformLocation;
   scaleLocation: WebGLUniformLocation;
@@ -35,12 +35,11 @@ export abstract class AbstractNodeProgram extends AbstractProgram implements INo
     attributes: number,
   ) {
     super(gl, vertexShaderSource, fragmentShaderSource, points, attributes);
-
     // Locations
-    this.donutLocation = gl.getAttribLocation(this.program, "a_donut");
     this.positionLocation = gl.getAttribLocation(this.program, "a_position");
     this.sizeLocation = gl.getAttribLocation(this.program, "a_size");
     this.colorLocation = gl.getAttribLocation(this.program, "a_color");
+    //this.donutLocation = gl.getAttribLocation(this.program, "a_donut");
 
     // Uniform Location
     const matrixLocation = gl.getUniformLocation(this.program, "u_matrix");
@@ -58,10 +57,10 @@ export abstract class AbstractNodeProgram extends AbstractProgram implements INo
 
   bind(): void {
     const gl = this.gl;
-
     gl.enableVertexAttribArray(this.positionLocation);
     gl.enableVertexAttribArray(this.sizeLocation);
     gl.enableVertexAttribArray(this.colorLocation);
+    //gl.enableVertexAttribArray(this.donutLocation);
     gl.vertexAttribPointer(
       this.positionLocation,
       2,
@@ -79,6 +78,7 @@ export abstract class AbstractNodeProgram extends AbstractProgram implements INo
       this.attributes * Float32Array.BYTES_PER_ELEMENT,
       12,
     );
+    // gl.vertexAttribPointer(this.donutLocation, 1, gl.FLOAT, false, this.attributes * Float32Array.BYTES_PER_ELEMENT, 16);
   }
 
   abstract process(data: NodeDisplayData, hidden: boolean, offset: number): void;
@@ -113,11 +113,15 @@ export function createNodeCompoundProgram(programClasses: Array<NodeProgramConst
     }
 
     bind(): void {
-      // nothing todo, it's already done in each program constructor
+      //nothing to do here
     }
 
     render(params: RenderParams): void {
-      this.programs.forEach((program) => program.render(params));
+      this.programs.forEach((program) => {
+        program.bind();
+        program.bufferData();
+        program.render(params);
+      });
     }
 
     process(data: NodeDisplayData, hidden: boolean, offset: number): void {

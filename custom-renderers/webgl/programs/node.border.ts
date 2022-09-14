@@ -1,3 +1,4 @@
+import { AbstractNodeProgram } from "./node";
 /**
  * Please, modify this class to fulfill the technical assignment part 2.
  *
@@ -7,7 +8,6 @@
  */
 import { floatColor } from "sigma/utils";
 import { NodeDisplayData } from "sigma/types";
-import { AbstractNodeProgram } from "./node";
 import { RenderParams } from "sigma/rendering/webgl/programs/common/program";
 
 // @ts-ignore
@@ -16,7 +16,7 @@ import vertexShaderSource from "!raw-loader!../shaders/node.border.vert.glsl";
 import fragmentShaderSource from "!raw-loader!../shaders/node.border.frag.glsl";
 
 const POINTS = 1,
-  ATTRIBUTES = 4;
+  ATTRIBUTES = 5;
 
 export default class NodeProgramBorder extends AbstractNodeProgram {
   constructor(gl: WebGLRenderingContext) {
@@ -24,10 +24,11 @@ export default class NodeProgramBorder extends AbstractNodeProgram {
     this.bind();
   }
 
-  process(data: NodeDisplayData, hidden: boolean, offset: number): void {
+  process(data: NodeDisplayData & { donut: number }, hidden: boolean, offset: number): void {
     const array = this.array;
     let i = offset * POINTS * ATTRIBUTES;
     if (hidden) {
+      array[i++] = 0;
       array[i++] = 0;
       array[i++] = 0;
       array[i++] = 0;
@@ -40,7 +41,8 @@ export default class NodeProgramBorder extends AbstractNodeProgram {
     array[i++] = data.x;
     array[i++] = data.y;
     array[i++] = data.size;
-    array[i] = color;
+    array[i++] = color;
+    //array[i++] = data.donut
   }
 
   render(params: RenderParams): void {

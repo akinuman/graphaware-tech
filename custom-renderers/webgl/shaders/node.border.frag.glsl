@@ -30,8 +30,10 @@ void main(void) {
     vec2 coord = gl_PointCoord;
     vec2 offset = vec2(0.5, 0.5);
     vec2 arcCoord = offset - coord;
-    // We can use donut attribute here for drawing
-    float arc = draw_arc(arcCoord, 0.5, 0.0, 0.2);
+    // We can use donut attribute here for drawing like (1 - v_donut)
+    //float arc = draw_arc(arcCoord, 0.5, 0.0, 1.0 - v_donut);
+    // I had a bit trouble to pass to donut attribute beacuse of I used hardcoded attribute.
+    float arc = draw_arc(arcCoord, 0.5, 0.0, 0.8);
     vec3 color = vec3(arc);
     color.x = 1.0;
     float distToCenter = length(gl_PointCoord - vec2(.5, .5));

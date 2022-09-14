@@ -22,6 +22,7 @@ import NodeProgramBorder from "./custom-renderers/webgl/programs/node.border";
 import drawLabel, { drawHover } from "./custom-renderers/canvas/canvas-utils";
 
 import ForceSupervisor from "graphology-layout-force/worker";
+import createNodeHaloProgram from "./custom-renderers/webgl/programs/createNewBorderProgram";
 
 const container = document.getElementById("sigma-container") as HTMLElement;
 
@@ -61,6 +62,7 @@ graph.addEdge("Suzan", "Sushi", { type: "arrow", label: "eats", size: 5 });
 
 // set initial positions
 graph.nodes().forEach((node, i) => {
+  // graph.setNodeAttribute(node, "a_donut", node.)
   const angle = (i * 2 * Math.PI) / graph.order;
   graph.setNodeAttribute(node, "x", 100 * Math.cos(angle));
   graph.setNodeAttribute(node, "y", 100 * Math.sin(angle));
@@ -72,16 +74,12 @@ const renderer = new Sigma(graph, container, {
     image: getNodeProgramImage(),
     border: NodeProgramBorder, // << here sigma is using your custom renderer (TA part 2)
   },
+
   renderEdgeLabels: true,
   stagePadding: 48,
   labelRenderer: drawLabel,
   hoverRenderer: drawHover,
   // << add custom canvas rendering for labels and hover (TA part 1)
-});
-
-renderer.on("afterRender", () => {
-  console.log("afterRender finished");
-  // update position from the viewport
 });
 
 // Create the spring layout, start it and stop it
